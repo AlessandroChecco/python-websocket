@@ -11,7 +11,14 @@ var outbox = new ReconnectingWebSocket(ws_scheme + location.host + "/submit");
 
 inbox.onmessage = function(message) {
   var data = JSON.parse(message.data);
-  $("#chat-text").append("<div class='panel panel-default'><div class='panel-heading'>" + $('<span/>').text(data.handle).html() + "</div><div class='panel-body'>" + $('<span/>').text(data.text).html() + "</div></div>");
+  var id = data.id ? data.id : '';
+  delete data["id"];
+  $("#chat-text").append("<div class='panel panel-default'><div class='panel-heading'>"
+                     + $('<span/>').text(id + ":").html()
+                     + "</div><div class='panel-body'>"
+                     + $('<span/>').text(JSON.stringify(data)).html()
+                     + "</div></div>");
+  console.log(message.data);
   $("#chat-text").stop().animate({
     scrollTop: $('#chat-text')[0].scrollHeight
   }, 800);
@@ -30,8 +37,11 @@ outbox.onclose = function(){
 
 $("#input-form").on("submit", function(event) {
   event.preventDefault();
-  var handle = $("#input-handle")[0].value;
-  var text   = $("#input-text")[0].value;
-  outbox.send(JSON.stringify({ handle: handle, text: text }));
-  $("#input-text")[0].value = "";
+  var key = $("#input-key")[0].value;
+  var value   = $("#input-value")[0].value;
+  output = { "id": "user" }
+  output[key] = value
+  outbox.send(JSON.stringify(output));
+  $("#input-key")[0].value = "";
+  $("#input-value")[0].value = "";
 });

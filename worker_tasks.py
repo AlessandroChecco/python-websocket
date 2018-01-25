@@ -1,4 +1,4 @@
-import os
+import os, json
 import redis
 import datetime as dt
 
@@ -8,8 +8,10 @@ redis = redis.from_url(REDISCLOUD_URL)
 start_time = dt.datetime.now()
 interval = 10 # seconds
 
-def publish(text):
-    message = '{ "handle": "worker", "text": "' + text + '" }'
+def publish(value):
+    message = json.dumps({ 'id': 'worker',
+                           'time_stamp': str(dt.datetime.now()),
+                           'value': value })
     redis.publish(REDIS_CHAN, message)
 
 def print_time():
@@ -19,7 +21,7 @@ def print_time():
     while True:
       delta=dt.datetime.now()-t
       if delta.seconds >= interval:
-         text = str(i) + " x " + str(interval) + " sec from " + str(start_time)
-         publish(text)
+         value = i
+         publish(value)
          i += 1
          t = dt.datetime.now()
