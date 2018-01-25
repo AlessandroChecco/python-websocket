@@ -1,3 +1,5 @@
+rq
+requests
 Flask==0.10.1
 Flask-Sockets==0.2.0
 gevent==1.0.2

@@ -1,24 +1,21 @@
 # -*- coding: utf-8 -*-
 
-"""
-Chat Server
-===========
-
-This simple application uses WebSockets to run a primitive chat server.
-"""
-
 import os
 import logging
 import redis
 import gevent
 from flask import Flask, render_template
 from flask_sockets import Sockets
+from rq import Queue
+from worker import conn
+from worker_tasks import print_time
 
 REDISCLOUD_URL = os.environ['REDISCLOUD_URL']
 REDIS_CHAN = 'chat'
 
 app = Flask(__name__)
 app.debug = 'DEBUG' in os.environ
+q = Queue(connection=conn)
 
 sockets = Sockets(app)
 redis = redis.from_url(REDISCLOUD_URL)
@@ -68,6 +65,7 @@ chats.start()
 
 @app.route('/')
 def hello():
+    q.enqueue(print_time)
     return render_template('index.html')
 
 @sockets.route('/submit')
