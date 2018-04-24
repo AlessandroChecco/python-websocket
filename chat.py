@@ -66,7 +66,10 @@ chats.start()
 @app.route('/')
 def hello():
     q.enqueue(print_time)
-    print("ALE")
+    try:
+        print(redis.hgetall(REDIS_CHAN))
+    except:
+        print("failed")
     return render_template('index.html')
 
 @sockets.route('/submit')
