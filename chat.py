@@ -71,7 +71,7 @@ def hello():
 
 
 @app.route('/room/<string:room>')
-def hello():
+def hello_room():
     REDIS_CHAN = room
     q.enqueue(print_time)
     return render_template('index.html')
