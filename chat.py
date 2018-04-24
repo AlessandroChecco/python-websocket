@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-#TODO: http://antirez.com/news/114 to add persistence with REDIS streams
+# TODO: http://antirez.com/news/114 to add persistence with REDIS streams
+
 import os
 import logging
 import redis
@@ -66,10 +67,13 @@ chats.start()
 @app.route('/')
 def hello():
     q.enqueue(print_time)
-    try:
-        print(redis.hgetall(REDIS_CHAN))
-    except:
-        print("failed")
+    return render_template('index.html')
+
+
+@app.route('/room/<string:room>')
+def hello():
+    REDIS_CHAN = room
+    q.enqueue(print_time)
     return render_template('index.html')
 
 @sockets.route('/submit')
