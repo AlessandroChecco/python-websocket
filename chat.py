@@ -66,6 +66,7 @@ chats.start()
 @app.route('/')
 def hello():
     q.enqueue(print_time)
+    print("ALE")
     return render_template('index.html')
 
 @sockets.route('/submit')
