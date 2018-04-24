@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+#TODO: http://antirez.com/news/114 to add persistence with REDIS streams
 import os
 import logging
 import redis
